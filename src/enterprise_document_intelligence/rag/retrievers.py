@@ -1,3 +1,5 @@
+from langchain_core.documents import Document
+
 from langchain_classic.retrievers import EnsembleRetriever
 from langchain_classic.retrievers.multi_query import MultiQueryRetriever
 from langchain_community.retrievers import BM25Retriever
@@ -55,14 +57,37 @@ class RetrieverManager:
             ],
         )
 
-    def similarity_search(self, query: str):
+    def similarity_search(
+        self,
+        query: str,
+    ) -> list[Document]:
+
         return self.dense_retriever.invoke(query)
 
-    def bm25_search(self, query: str):
+
+    def bm25_search(
+        self,
+        query: str,
+    ) -> list[Document]:
+
         return self.bm25_retriever.invoke(query)
 
-    def multi_query_search(self, query: str):
-        return self.multi_query_retriever.invoke(query)
 
-    def hybrid_search(self, query: str):
-        return self.hybrid_retriever.invoke(query)
+    def multi_query_search(
+        self,
+        query: str,
+    ) -> list[Document]:
+
+        documents = self.multi_query_retriever.invoke(query)
+
+        return documents[: self.k]
+
+
+    def hybrid_search(
+        self,
+        query: str,
+    ) -> list[Document]:
+
+        documents = self.hybrid_retriever.invoke(query)
+
+        return documents[: self.k]
