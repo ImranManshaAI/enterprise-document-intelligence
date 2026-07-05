@@ -1,13 +1,22 @@
 from enterprise_document_intelligence.agents.state import AgentState
+from enterprise_document_intelligence.conflict.service import (
+    ConflictService,
+)
+
+
+service = ConflictService()
 
 
 def conflict_node(state: AgentState) -> AgentState:
     """
-    Placeholder conflict detection node.
+    Execute conflict detection workflow.
     """
 
-    state["answer"] = (
-        "Conflict detection workflow is not implemented yet."
+    response = service.detect(
+        state["question"]
     )
+
+    state["answer"] = response.answer
+    state["sources"] = response.sources
 
     return state

@@ -52,9 +52,13 @@ def build_graph():
     graph.add_edge("context", "answer")
     graph.add_edge("answer", END)
 
-    # Placeholder workflows
+    # Compare workflow
     graph.add_edge("compare", END)
+
+    # Summarization workflow
     graph.add_edge("summarize", END)
+
+    # Conflict workflow
     graph.add_edge("conflict", END)
 
     return graph.compile()

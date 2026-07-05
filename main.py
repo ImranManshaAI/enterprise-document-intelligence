@@ -1,9 +1,12 @@
-from src.app.core.config import settings
+import uvicorn
 
-print("=" * 50)
-print(settings.app_name)
-print(settings.app_version)
-print(settings.environment)
-print(settings.qdrant_url)
-print(settings.qdrant_collection)
-print("=" * 50)
+from enterprise_document_intelligence.api.app import app
+
+
+if __name__ == "__main__":
+    uvicorn.run(
+        app,
+        host="0.0.0.0",
+        port=8000,
+        reload=True,
+    )

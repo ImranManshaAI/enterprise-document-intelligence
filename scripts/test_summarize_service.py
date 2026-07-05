@@ -10,7 +10,7 @@ def main():
 
     service = SummarizeService()
 
-    answer, sources = service.summarize(
+    response = service.summarize(
         QUESTION,
     )
 
@@ -18,7 +18,7 @@ def main():
     print("SUMMARY")
     print("=" * 100)
 
-    print(answer)
+    print(response.answer)
 
     print()
 
@@ -26,7 +26,7 @@ def main():
     print("SOURCES")
     print("=" * 100)
 
-    for source in sources:
+    for source in response.sources:
 
         print(source)
 

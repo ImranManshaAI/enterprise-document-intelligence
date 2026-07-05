@@ -11,7 +11,7 @@ def get_llm() -> ChatGoogleGenerativeAI:
         raise ValueError("GOOGLE_API_KEY is not configured.")
 
     return ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         api_key=settings.google_api_key,
         temperature=0,
     )
