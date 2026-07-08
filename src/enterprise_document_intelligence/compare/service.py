@@ -2,6 +2,7 @@ from enterprise_document_intelligence.compare.context_builder import (
     CompareContextBuilder,
 )
 from enterprise_document_intelligence.compare.extractor import TopicExtractor
+from enterprise_document_intelligence.core.llm_utils import extract_text
 from enterprise_document_intelligence.compare.retriever import CompareRetriever
 from enterprise_document_intelligence.core.llm import get_llm
 from enterprise_document_intelligence.prompts.compare_prompt import (
@@ -47,6 +48,18 @@ class CompareService:
         # Generate answer
         response = self.llm.invoke(prompt)
 
+        print("=" * 80)
+        print("RESPONSE TYPE:", type(response))
+        print()
+        print("CONTENT TYPE:", type(response.content))
+        print()
+        print("RAW RESPONSE:")
+        print(response)
+        print()
+        print("CONTENT:")
+        print(response.content)
+        print("=" * 80)
+
         # Collect unique sources
         sources = []
 
@@ -70,4 +83,6 @@ class CompareService:
 
                     sources.append(source)
 
-        return response.content, sources
+        answer = extract_text(response)
+
+        return answer, sources
