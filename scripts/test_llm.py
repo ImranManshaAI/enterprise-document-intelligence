@@ -6,9 +6,11 @@ def main():
     llm = get_llm()
 
     response = llm.invoke(
-        "Say hello in one sentence."
+        "Reply with exactly: OpenRouter is working."
     )
 
+    print(type(response))
+    print()
     print(response.content)
 
 

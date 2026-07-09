@@ -10,8 +10,14 @@ class Settings(BaseSettings):
     # Environment
     environment: str = "development"
 
+    # LLM Configuration
+    llm_provider: str = "gemini"
+    llm_model: str = "gemini-2.5-flash"
+
     # API Keys
     google_api_key: str = ""
+    open_router_api_key: str = ""
+    groq_api_key: str = ""
 
     # Vector Database
     qdrant_url: str = "http://localhost:6333"
