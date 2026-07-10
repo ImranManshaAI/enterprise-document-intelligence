@@ -6,6 +6,20 @@ class ChatRequest(BaseModel):
 
 
 class ChatResponse(BaseModel):
+    success: bool
+
     route: str
+
     answer: str
+
     sources: list[str]
+
+    provider: str
+
+    model: str
+
+    retrieval_mode: str
+
+    latency_ms: int
+
+    cached: bool

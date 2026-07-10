@@ -1,12 +1,17 @@
 import uvicorn
 
-from enterprise_document_intelligence.api.app import app
+from enterprise_document_intelligence.core.config import (
+    get_settings,
+)
 
 
 if __name__ == "__main__":
+
+    settings = get_settings()
+
     uvicorn.run(
-        app,
+        "enterprise_document_intelligence.api.app:app",
         host="0.0.0.0",
         port=8000,
-        reload=True,
+        reload=settings.environment == "development",
     )

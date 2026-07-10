@@ -81,6 +81,13 @@ class RAGService:
             question
         )
 
+        print("=" * 100)
+        print("CONTEXT")
+        print("=" * 100)
+        print(context)
+        print("=" * 100)
+
+
         prompt = prompt_template.format(
             question=question,
             context=context,
