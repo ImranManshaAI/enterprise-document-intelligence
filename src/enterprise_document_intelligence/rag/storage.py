@@ -1,3 +1,4 @@
+from functools import lru_cache
 import pickle
 from pathlib import Path
 
@@ -19,7 +20,12 @@ class DocumentStorage:
         with open(SAVE_PATH, "wb") as f:
             pickle.dump(documents, f)
 
+        # Clear cache after saving new data
+        DocumentStorage.load.cache_clear()
+
+
     @staticmethod
+    @lru_cache(maxsize=1)
     def load() -> list[Document]:
 
         with open(SAVE_PATH, "rb") as f:
