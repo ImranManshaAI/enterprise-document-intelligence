@@ -36,12 +36,32 @@ def chat(request: ChatRequest):
 
     start_time = time.perf_counter()
 
-    state = graph.invoke(
-        {
-            "question": request.question,
-            "retrieval_mode": request.retrieval_mode,
-        }
-    )
+    try:
+
+        state = graph.invoke(
+            {
+                "question": request.question,
+                "retrieval_mode": request.retrieval_mode,
+            }
+        )
+
+    except NotImplementedError as e:
+
+        latency_ms = int(
+            (time.perf_counter() - start_time) * 1000
+        )
+
+        return ChatResponse(
+            success=False,
+            route="search",
+            answer=str(e),
+            sources=[],
+            provider=settings.llm_provider,
+            model=settings.llm_model,
+            retrieval_mode=request.retrieval_mode,
+            latency_ms=latency_ms,
+            cached=False,
+        )
 
     latency_ms = int(
         (time.perf_counter() - start_time) * 1000
