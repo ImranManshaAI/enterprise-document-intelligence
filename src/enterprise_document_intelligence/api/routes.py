@@ -39,6 +39,7 @@ def chat(request: ChatRequest):
     state = graph.invoke(
         {
             "question": request.question,
+            "retrieval_mode": request.retrieval_mode,
         }
     )
 
@@ -53,7 +54,7 @@ def chat(request: ChatRequest):
         sources=state["sources"],
         provider=settings.llm_provider,
         model=settings.llm_model,
-        retrieval_mode="advanced",
+        retrieval_mode=request.retrieval_mode,
         latency_ms=latency_ms,
         cached=False,
     )

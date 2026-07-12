@@ -9,7 +9,8 @@ def search_node(state: AgentState) -> AgentState:
 
     result = search_documents.invoke(
         {
-            "query": state["question"]
+            "query": state["question"],
+            "retrieval_mode": state["retrieval_mode"],
         }
     )
 

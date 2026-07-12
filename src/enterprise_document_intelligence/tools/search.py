@@ -2,16 +2,23 @@ from langchain_core.tools import tool
 
 from enterprise_document_intelligence.rag.retrievers import RetrieverManager
 
-
-retriever = RetrieverManager(k=5)
+from enterprise_document_intelligence.core.enums import RetrievalMode
 
 
 @tool
-def search_documents(query: str) -> dict:
+def search_documents(
+    query: str,
+    retrieval_mode: RetrievalMode,
+) -> dict:
+    
     """
     Search enterprise documents using hybrid retrieval.
     """
-
+    retriever = RetrieverManager(
+        k=5,
+        mode=retrieval_mode,
+    )
+    
     documents = retriever.hybrid_search(query)
 
     sources = []

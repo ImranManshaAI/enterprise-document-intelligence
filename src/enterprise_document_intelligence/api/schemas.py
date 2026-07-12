@@ -1,8 +1,13 @@
+from typing import Literal
+
 from pydantic import BaseModel
 
+from enterprise_document_intelligence.core.enums import RetrievalMode
 
 class ChatRequest(BaseModel):
     question: str
+
+    retrieval_mode: RetrievalMode = RetrievalMode.ADVANCED
 
 
 class ChatResponse(BaseModel):
