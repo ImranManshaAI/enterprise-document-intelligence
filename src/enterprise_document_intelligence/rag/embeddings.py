@@ -1,10 +1,15 @@
+from functools import lru_cache
+
 from langchain_huggingface import HuggingFaceEmbeddings
 
 
+@lru_cache(maxsize=1)
 def get_embedding_model() -> HuggingFaceEmbeddings:
     """
-    Returns the embedding model used throughout the project.
+    Returns a singleton embedding model.
     """
+
+    print("Loading embedding model...")
 
     return HuggingFaceEmbeddings(
         model_name="BAAI/bge-base-en-v1.5",
