@@ -13,7 +13,7 @@ from enterprise_document_intelligence.rag.retrievers.research import (
 
 class RetrieverManager:
     """
-    Backward-compatible facade for retrieval strategies.
+    Retrieval strategy manager with lazy initialization.
     """
 
     def __init__(
@@ -21,15 +21,42 @@ class RetrieverManager:
         k: int = 5,
         mode: RetrievalMode = RetrievalMode.ADVANCED,
     ):
+        self.k = k
         self.mode = mode
 
-        self.fast = FastRetriever(k)
+        self._fast = None
+        self._advanced = None
+        self._research = None
 
-        self.advanced = AdvancedRetriever(k)
+    @property
+    def fast(self):
 
-        self.research = ResearchRetriever()
+        if self._fast is None:
+            print("Initializing FastRetriever...")
+            self._fast = FastRetriever(self.k)
+
+        return self._fast
+
+    @property
+    def advanced(self):
+
+        if self._advanced is None:
+            print("Initializing AdvancedRetriever...")
+            self._advanced = AdvancedRetriever(self.k)
+
+        return self._advanced
+
+    @property
+    def research(self):
+
+        if self._research is None:
+            print("Initializing ResearchRetriever...")
+            self._research = ResearchRetriever()
+
+        return self._research
 
     def _strategy(self):
+
         if self.mode == RetrievalMode.FAST:
             return self.fast
 
