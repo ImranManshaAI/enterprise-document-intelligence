@@ -1,13 +1,14 @@
 import time
 
-from enterprise_document_intelligence.core.config import get_settings
 from fastapi import APIRouter
 
 from enterprise_document_intelligence.api.dependencies import graph
 from enterprise_document_intelligence.api.schemas import (
     ChatRequest,
     ChatResponse,
+    Citation,
 )
+from enterprise_document_intelligence.core.config import get_settings
 
 router = APIRouter()
 
@@ -45,7 +46,7 @@ def chat(request: ChatRequest):
             }
         )
 
-    except NotImplementedError as e:
+    except NotImplementedError:
 
         latency_ms = int(
             (time.perf_counter() - start_time) * 1000
@@ -54,8 +55,9 @@ def chat(request: ChatRequest):
         return ChatResponse(
             success=False,
             route="search",
-            answer=str(e),
+            answer="Research retrieval mode will be available in a future release.",
             sources=[],
+            citations=[],
             provider=settings.llm_provider,
             model=settings.llm_model,
             retrieval_mode=request.retrieval_mode,
@@ -67,11 +69,36 @@ def chat(request: ChatRequest):
         (time.perf_counter() - start_time) * 1000
     )
 
+    citations = []
+
+    seen = set()
+
+    for document in state["documents"]:
+
+        document_name = document.metadata.get("document_name")
+
+        page = document.metadata.get("page")
+
+        key = (document_name, page)
+
+        if key in seen:
+            continue
+
+        seen.add(key)
+
+        citations.append(
+            Citation(
+                document=document_name,
+                page=page,
+            )
+        )
+
     return ChatResponse(
         success=True,
         route=state["route"],
         answer=state["answer"],
         sources=state["sources"],
+        citations=citations,
         provider=settings.llm_provider,
         model=settings.llm_model,
         retrieval_mode=request.retrieval_mode,
