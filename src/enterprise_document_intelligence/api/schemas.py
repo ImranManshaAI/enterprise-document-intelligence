@@ -18,6 +18,10 @@ class Citation(BaseModel):
 
     page: int
 
+    pdf_file: str
+
+    pdf_url: str
+
 
 class ChatResponse(BaseModel):
     success: bool

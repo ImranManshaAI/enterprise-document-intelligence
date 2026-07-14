@@ -1,5 +1,5 @@
 import time
-
+from pathlib import Path
 from fastapi import APIRouter
 
 from enterprise_document_intelligence.api.dependencies import graph
@@ -86,10 +86,21 @@ def chat(request: ChatRequest):
 
         seen.add(key)
 
+        pdf_file = Path(
+            document.metadata.get("file_path")
+        ).name
+
+        pdf_url = (
+            f"/documents/{pdf_file}"
+            f"#page={page}"
+        )
+
         citations.append(
             Citation(
                 document=document_name,
                 page=page,
+                pdf_file=pdf_file,
+                pdf_url=pdf_url,
             )
         )
 
