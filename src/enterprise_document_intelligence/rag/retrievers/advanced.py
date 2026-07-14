@@ -15,6 +15,8 @@ from enterprise_document_intelligence.rag.vector_store import (
     VectorStoreManager,
 )
 
+from enterprise_document_intelligence.core.config import get_settings
+from enterprise_document_intelligence.rag.reranker import CrossEncoderReranker
 
 class AdvancedRetriever(BaseRetriever):
     """
@@ -29,7 +31,10 @@ class AdvancedRetriever(BaseRetriever):
 
     def __init__(self, k: int = 5):
 
-        self.k = k
+        settings = get_settings()
+
+        self.k = settings.rerank_top_k
+        self.retrieval_k = settings.retrieval_top_k
 
         manager = VectorStoreManager()
 
@@ -38,7 +43,7 @@ class AdvancedRetriever(BaseRetriever):
         # Dense Retriever
         self.dense_retriever = self.vector_store.as_retriever(
             search_type="similarity",
-            search_kwargs={"k": k},
+            search_kwargs={"k": self.retrieval_k},
         )
 
         # BM25 Retriever
@@ -47,7 +52,7 @@ class AdvancedRetriever(BaseRetriever):
         self.bm25_retriever = BM25Retriever.from_documents(
             docs
         )
-        self.bm25_retriever.k = k
+        self.bm25_retriever.k = self.retrieval_k
 
         # MultiQuery Retriever
         self.multi_query_retriever = (
@@ -69,6 +74,8 @@ class AdvancedRetriever(BaseRetriever):
             ],
         )
 
+        self.reranker = CrossEncoderReranker()
+
     def retrieve(
         self,
         question: str,
@@ -78,4 +85,10 @@ class AdvancedRetriever(BaseRetriever):
             question
         )
 
-        return documents[: self.k]
+        documents = self.reranker.rerank(
+            query=question,
+            documents=documents,
+            top_k=self.k,
+        )
+
+        return documents

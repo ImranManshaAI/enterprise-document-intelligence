@@ -2,6 +2,8 @@ from functools import lru_cache
 
 from langchain_core.documents import Document
 from sentence_transformers import CrossEncoder
+from enterprise_document_intelligence.core.config import get_settings
+
 
 
 @lru_cache(maxsize=1)
@@ -12,8 +14,12 @@ def get_reranker() -> CrossEncoder:
 
     print("Loading CrossEncoder reranker...")
 
+    settings = get_settings()
+
+    ...
+
     return CrossEncoder(
-        "cross-encoder/ms-marco-MiniLM-L-6-v2",
+        settings.reranker_model,
     )
 
 
